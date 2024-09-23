@@ -78,13 +78,18 @@ def parse_args():
     return parser.parse_args()
 
 
+import torch.nn as nn
 def get_model_and_checkpoint(model, dataset, checkpoint_path, n_gpu=1):
     if model == 'mobilenet' and dataset == 'imagenet':
         from models.mobilenet import MobileNet
-        net = MobileNet(n_class=1000)
+        net = MobileNet(n_class=5)
     elif model == 'mobilenetv2' and dataset == 'imagenet':
-        from models.mobilenet_v2 import MobileNetV2
-        net = MobileNetV2(n_class=1000)
+        from torchvision.models import mobilenet_v2
+        net = mobilenet_v2()
+        net.classifier = nn.Sequential(
+            nn.Dropout(p=0.2, inplace=False),
+            nn.Linear(in_features=1280, out_features=5, bias=True)
+        )
     else:
         raise NotImplementedError
     sd = torch.load(checkpoint_path)

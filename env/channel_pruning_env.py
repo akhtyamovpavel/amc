@@ -430,6 +430,7 @@ class ChannelPruningEnv:
                         self.wsize_list.append(m_list[idx].params)
                         self.flops_list.append(m_list[idx].flops)
                 for idx in self.prunable_idx:
+                    print(idx)
                     f_in_np = m_list[idx].input_feat.data.cpu().numpy()
                     f_out_np = m_list[idx].output_feat.data.cpu().numpy()
                     if len(f_in_np.shape) == 4:  # conv
